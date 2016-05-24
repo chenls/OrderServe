@@ -88,8 +88,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+//            case R.id.action_search:
+//                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+//                startActivity(intent);
+//                break;
+            case R.id.action_notifications:
+                Intent intent2 = new Intent(MainActivity.this, NotifyActivity.class);
+                startActivity(intent2);
+                break;
+//            case R.id.action_settings:
+//                Intent intent3 = new Intent(MainActivity.this, SettingsActivity.class);
+//                startActivity(intent3);
+//                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
