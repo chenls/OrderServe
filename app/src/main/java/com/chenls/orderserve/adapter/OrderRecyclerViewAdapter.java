@@ -1,5 +1,6 @@
 package com.chenls.orderserve.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class OrderRecyclerViewAdapter extends
             if (dish != null)
                 break;
         }
+        assert dish != null;
         Glide.with(context)
                 .load(dish.getPic().getFileUrl(context))
                 .placeholder(R.mipmap.loading)
@@ -71,12 +73,13 @@ public class OrderRecyclerViewAdapter extends
                 Bundle bundle = new Bundle();
                 MapSerializable map = new MapSerializable(order.getDishMap());
                 bundle.putSerializable("map", (Serializable) map.getMap());
-                bundle.putString("consigneeMessage",  order.getConsigneeMessage());
+                bundle.putString("consigneeMessage", order.getConsigneeMessage());
                 bundle.putString("mark", order.getMark());
                 bundle.putString("price", order.getPrice() + "");
                 bundle.putString("objectId", order.getObjectId());
+                bundle.putInt("state", order.getState());
                 intent.putExtras(bundle);
-                context.startActivity(intent);
+                ((Activity) context).startActivityForResult(intent, 1);
             }
         });
 

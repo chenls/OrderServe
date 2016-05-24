@@ -24,19 +24,12 @@ public class AckOrderRecyclerViewAdapter extends RecyclerView.Adapter<AckOrderRe
     private final String consigneeMessage;
     private final String mark;
     private Context context;
-    private OnClickListenerInterface mListener;
 
     public AckOrderRecyclerViewAdapter(Context context, Map<Integer, Dish> dishMap, String mark, String consigneeMessage) {
         this.context = context;
         this.dishMap = dishMap;
         this.mark = mark;
         this.consigneeMessage = consigneeMessage;
-        if (context instanceof OnClickListenerInterface) {
-            mListener = (OnClickListenerInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnClickListenerInterface");
-        }
     }
 
     private int[] getKey(Map<Integer, Dish> map) {
@@ -126,9 +119,5 @@ public class AckOrderRecyclerViewAdapter extends RecyclerView.Adapter<AckOrderRe
     public int getItemViewType(int position) {
         if (position == 0) return 1;
         return 0;
-    }
-
-    public interface OnClickListenerInterface {
-        void OnClickListener(int id, String name, String tel, String address);
     }
 }

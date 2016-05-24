@@ -23,6 +23,8 @@ import com.chenls.orderserve.fragment.OrderFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private OrderFragment orderFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 showFabDialog();
             }
         });
-
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(getString(R.string.order));
         //判断用户名是否已经登录
         String username = (String) MyUser.getObjectByKey(this, "username");
         if (TextUtils.isEmpty(username)) {
@@ -47,15 +51,19 @@ public class MainActivity extends AppCompatActivity {
             loginDialogFragment.show(getSupportFragmentManager(), "loginDialogFragment");
         } else {
             //已登录
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setTitle(getString(R.string.order));
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.relativeLayout, OrderFragment.newInstance());
-            fragmentTransaction.commit();
+            refreshOrder();
         }
 
     }
+
+    private void refreshOrder() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        orderFragment = OrderFragment.newInstance();
+        fragmentTransaction.replace(R.id.relativeLayout, orderFragment);
+        fragmentTransaction.commit();
+    }
+
     private void showFabDialog() {
         new AlertDialog.Builder(MainActivity.this).setTitle("点赞")
                 .setMessage("去项目地址给作者个Star，鼓励下作者。")
@@ -66,30 +74,32 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);           //指定Action
                         intent.setData(uri);                            //设置Uri
-                        MainActivity.this.startActivity(intent);        //启动Activity
+                        startActivity(intent);        //启动Activity
                     }
                 })
                 .show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK)
+            if (requestCode == 1) {
+                boolean isNeedRefresh = data.getBooleanExtra("isNeedRefresh", false);
+                if (isNeedRefresh) {
+                    orderFragment.myRefresh(true);
+                }
+            }
     }
 }
