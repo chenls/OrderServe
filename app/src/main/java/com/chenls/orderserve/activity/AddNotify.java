@@ -98,6 +98,7 @@ public class AddNotify extends AppCompatActivity {
         BmobPush.startWork(this);
         // 使用推送服务时的初始化操作
         BmobInstallation.getCurrentInstallation(this).save();
+
         BmobPushManager<BmobInstallation> bmobPush = new BmobPushManager<>(this);
         BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
         query.addWhereEqualTo("deviceType", "android");
