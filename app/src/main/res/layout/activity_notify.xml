@@ -36,5 +36,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
-        android:src="@drawable/ic_favorite_24dp" />
+        android:src="@mipmap/add" />
 </android.support.design.widget.CoordinatorLayout>
