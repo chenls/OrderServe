@@ -18,7 +18,6 @@ import java.util.List;
 
 import cn.bmob.v3.listener.DeleteListener;
 
-
 public class NotifyRecyclerViewAdapter extends
         RecyclerView.Adapter<NotifyRecyclerViewAdapter.ViewHolder> {
     private Context context;
