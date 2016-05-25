@@ -1,6 +1,9 @@
 package com.chenls.orderserve.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,8 @@ import com.chenls.orderserve.R;
 import com.chenls.orderserve.bean.Notify;
 
 import java.util.List;
+
+import cn.bmob.v3.listener.DeleteListener;
 
 
 public class NotifyRecyclerViewAdapter extends
@@ -40,7 +45,40 @@ public class NotifyRecyclerViewAdapter extends
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, notify.getTitle(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(context.getString(R.string.delete_notify));
+                builder.setMessage(context.getString(R.string.sure_delete_notify));
+                builder.setPositiveButton(context.getString(R.string.sure), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        final ProgressDialog progressDialog = new ProgressDialog(context);
+                        progressDialog.setMessage("请稍等...");
+                        progressDialog.show();
+                        Notify myNotify = new Notify();
+                        myNotify.setObjectId(notify.getObjectId());
+                        myNotify.delete(context, new DeleteListener() {
+                            @Override
+                            public void onSuccess() {
+                                notifyList.remove(notify);
+                                notifyItemRemoved(holder.getLayoutPosition());
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(int i, String s) {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.create().show();
             }
         });
     }

@@ -1,10 +1,13 @@
 package com.chenls.orderserve.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.chenls.orderserve.CommonUtil;
 import com.chenls.orderserve.R;
@@ -26,7 +29,17 @@ public class NotifyActivity extends AppCompatActivity implements SwipeRefreshLay
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotifyActivity.this, AddNotify.class);
+                startActivityForResult(intent,1);
+            }
+        });
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        assert swipeRefreshLayout != null;
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setProgressViewOffset(false, 0, 40);
@@ -61,6 +74,7 @@ public class NotifyActivity extends AppCompatActivity implements SwipeRefreshLay
                 swipeRefreshLayout.setRefreshing(false);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(NotifyActivity.this);
+                assert recyclerView != null;
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(new NotifyRecyclerViewAdapter(NotifyActivity.this, notifyList));
             }
@@ -70,5 +84,17 @@ public class NotifyActivity extends AppCompatActivity implements SwipeRefreshLay
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK)
+            if (requestCode == 1) {
+                boolean isNeedRefresh = data.getBooleanExtra("isNeedRefresh", false);
+                if (isNeedRefresh) {
+                    swipeRefreshLayout.setProgressViewOffset(false, 0, 40);
+                    swipeRefreshLayout.setRefreshing(true);
+                    queryNotify();
+                }
+            }
     }
 }

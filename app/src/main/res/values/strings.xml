@@ -22,6 +22,8 @@
     <string name="sure_pay_over">上菜完成，交易结束</string>
     <string name="action_scan">搜索</string>
     <string name="action_notifications">通知</string>
+    <string name="delete_notify">删除通知</string>
+    <string name="sure_delete_notify">确定删除本条通知吗</string>
     <string-array name="state">
         <item>已取消</item>
         <item>未支付</item>
