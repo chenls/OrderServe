@@ -14,6 +14,10 @@ import com.chenls.orderserve.CommonUtil;
 import com.chenls.orderserve.R;
 import com.chenls.orderserve.bean.Notify;
 
+import cn.bmob.push.BmobPush;
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobPushManager;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.SaveListener;
 
 public class AddNotify extends AppCompatActivity {
@@ -61,6 +65,7 @@ public class AddNotify extends AppCompatActivity {
             notify.save(AddNotify.this, new SaveListener() {
                 @Override
                 public void onSuccess() {
+                    pushToAndroid(title.getText().toString());
                     progressDialog.dismiss();
                     Toast.makeText(AddNotify.this, "发布成功", Toast.LENGTH_SHORT).show();
                     isNeedRefresh = true;
@@ -79,6 +84,25 @@ public class AddNotify extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 给android平台终端推送
+     *
+     * @param message
+     */
+    private void pushToAndroid(String message) {
+        //开启debug服务后，可知晓push服务是否正常启动和运行
+        BmobPush.setDebugMode(true);
+        //开启推送服务
+        BmobPush.startWork(this);
+        // 使用推送服务时的初始化操作
+        BmobInstallation.getCurrentInstallation(this).save();
+        BmobPushManager<BmobInstallation> bmobPush = new BmobPushManager<>(this);
+        BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+        query.addWhereEqualTo("deviceType", "android");
+        bmobPush.setQuery(query);
+        bmobPush.pushMessage(message);
     }
 
     private void returnData() {

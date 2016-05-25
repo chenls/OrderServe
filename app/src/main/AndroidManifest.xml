@@ -85,7 +85,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-        <activity android:name=".activity.AddNotify">
+        <activity android:name=".activity.AddNotify"
+            android:label="@string/addNotify">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.NotifyActivity" />
